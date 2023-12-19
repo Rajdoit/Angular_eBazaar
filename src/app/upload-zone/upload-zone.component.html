@@ -1,0 +1,35 @@
+<div class="container">
+    <h1 class="">Preview and Upload Excel File </h1>
+    <input type="file" class="form-control" (change)="readExcelFile($event)"/>
+    <button class="btn" mat-raised-button color="primary" (click)="uploadFile()"> Upload</button>
+    <button class="btn" type="reset" mat-raised-button color="warning"> Clear</button>
+</div>
+
+<div class="container">
+    <div class="scrollTable">
+    <div class="table-responsive table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl table-responsive-xxl">
+        <table class=" table table-secondary table-striped table-bordered" id="dtHorizontalExample" >
+            <thead class="table-dark">
+                <tr>
+                    <th *ngFor="let head of heads_Obj" scope="col">{{head}}</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr *ngFor="let row of body_Obj">
+                    <td *ngFor="let val of row">{{val}}</td>
+                </tr>
+                
+            </tbody>
+            <tfoot class="table-dark">
+                <tr>
+                    <th *ngFor="let head of heads_Obj" scope="col">{{head}}</th>
+                </tr>
+              </tfoot>
+        </table>
+    </div>
+    </div>
+</div>
+
+
+<!--  -->
+

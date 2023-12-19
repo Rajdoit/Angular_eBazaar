@@ -1,0 +1,11 @@
+container{
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.scrollTable{
+    height: 700px;
+    overflow-x: scroll;
+    overflow-y: scroll;
+}
