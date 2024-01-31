@@ -2,7 +2,7 @@
     <h1 class="">Preview and Upload Excel File </h1>
     <input type="file" class="form-control" (change)="readExcelFile($event)"/>
     <button class="btn" mat-raised-button color="primary" (click)="uploadFile()"> Upload</button>
-    <button class="btn" type="reset" mat-raised-button color="warning"> Clear</button>
+    <button class="btn" type="reset" mat-raised-button color="warning" (click)="clearFile()"> Clear</button>
 </div>
 
 <div class="container">

@@ -10,7 +10,7 @@ import * as xls from 'xlsx';
 })
 export class UploadZoneComponent {
   title = "Upload-Zone";
-  fileUploadUrl = " ";
+  fileUploadUrl = 'http://localhost:8080/product/upload';
   constructor(private _http:HttpClient){  }
 
   ngOnInit(): void{
@@ -22,13 +22,21 @@ export class UploadZoneComponent {
   heads_Obj:any = [];
   body_Obj:any = [];
 
+  clearFile(){
+    this.file.values = null; 
+    this.records =null;
+    this.heads_Obj = null;
+    this.body_Obj = null;
+    this.readExcelFile(this.file);
+  }
+
   readExcelFile(event: any) {
     this.body_Obj = [];
 
-    const file = event.target.files[0];
+    this.file = event.target.files[0];
     let fileReader = new FileReader();
 
-    fileReader.readAsArrayBuffer(file);
+    fileReader.readAsArrayBuffer(this.file);
 
     fileReader.onload =()=>{
       let data = fileReader.result;
@@ -61,12 +69,13 @@ export class UploadZoneComponent {
 
 uploadFile(){
   let formData = new FormData();
-  formData.append("file", this.file);
+  formData.append('file', this.file);
 
   this._http.post(this.fileUploadUrl, formData).subscribe(
     (data) =>{
       //Success
       console.log(data);
+      alert(data);
       // alert("File is uploaded");
 
     },
