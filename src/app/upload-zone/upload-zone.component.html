@@ -1,8 +1,37 @@
 <div class="container">
-    <h1 class="">Preview and Upload Excel File </h1>
+
+    <form class="m-2 p-2">
+        <div class="border border-primary rounded p-4 mx-auto">
+            <div class="form-group row text-center">
+                <h1>Preview and upload excel file here</h1>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Date Interval (Same As Download Excel Sheet)</label>
+                <div class="col-sm-9">
+                    <input #dateInput type="text" class="form-control" placeholder="01/12/2021 - 01/01/2021">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Select Excel</label>
+                <div class="col-sm-9">
+                    <input #excelFileInput type="file" class="form-control" (change)="readExcelFile($event)"/>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-3"></div>
+                <div class="col-9">
+                    <button class="btn m-3" mat-raised-button color="primary" [disabled]="!isFileSelected" (click)="previewConfirm()"> Preview Confirm</button>
+                    <button class="btn m-3" mat-raised-button color="primary" *ngIf="uploadButtonShow" (click)="uploadFile()"> Upload</button>
+                    <button class="btn m-3" type="reset" mat-raised-button color="warning" (click)="clearFile()"> Clear</button>
+                </div>
+            </div>
+        </div>
+      </form>
+
+    <!-- <h1 class="">Preview and Upload Excel File </h1>
     <input #myInputForSelectFile type="file" class="form-control" (change)="readExcelFile($event)"/>
     <button class="btn" mat-raised-button color="primary" (click)="uploadFile()"> Upload</button>
-    <button class="btn" type="reset" mat-raised-button color="warning" (click)="clearFile()"> Clear</button>
+    <button class="btn" type="reset" mat-raised-button color="warning" (click)="clearFile()"> Clear</button> -->
 </div>
 
 <div class="container">

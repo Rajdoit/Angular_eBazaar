@@ -10,9 +10,10 @@ import * as xls from 'xlsx';
 })
 export class UploadZoneComponent {
   title = "Upload-Zone";
-  fileUploadUrl = 'http://localhost:8080/product/upload';
+  fileUploadUrl = 'http://localhost:8080/ebazaarReportsData/upload';
   constructor(private _http:HttpClient){  }
-
+  isFileSelected: boolean = false; // Tracks if a file is selected
+  uploadButtonShow: boolean = false; // Hide the Uplaod Button
   ngOnInit(): void{
 
   }
@@ -21,75 +22,92 @@ export class UploadZoneComponent {
   records:any;
   heads_Obj:any = [];
   body_Obj:any = [];
-  @ViewChild('myInputForSelectFile')
-  myInputResetVariable: any;
-
+  @ViewChild('excelFileInput')
+  clearFileReset: any;
+  @ViewChild('dateInput')
+  clearDateReset: any;
   clearFile(){
     this.file.values = null; 
     this.records =null;
     this.heads_Obj = null;
     this.body_Obj = null;
-    //this.readExcelFile(this.file);
 
-    // This is for reset input file
+    this.isFileSelected = false;
+    this.uploadButtonShow = false;
+
+    if (this.clearFileReset) {
+      this.clearFileReset.nativeElement.value = "";
+    }
+    if (this.clearDateReset) {
+      this.clearDateReset.nativeElement.value = "";
+    }
     // console.log(this.myInputResetVariable.nativeElement.files);
-    this.myInputResetVariable.nativeElement.value = "";
-    // console.log(this.myInputResetVariable.nativeElement.files);
+  }
+
+  previewConfirm(){
+    this.uploadButtonShow = true; // Show the upload button
   }
 
   readExcelFile(event: any) {
     this.body_Obj = [];
     this.heads_Obj = [];
 
-    this.file = event.target.files[0]; //Store data from Uploaded File
-    let fileReader = new FileReader(); 
-    fileReader.readAsArrayBuffer(this.file); //File Reader help to store file in binary string or array buffer
+      this.isFileSelected = true; // Enable the preview button
+      this.uploadButtonShow = false; // Show the upload button.
 
-    fileReader.onload =()=>{
-      let data = fileReader.result; //Store array buffer data in data varable
-      let workbook = xls.read(data, {type:'array'}); // Here we are reading file data
+      this.file = event.target.files[0]; //Store data from Uploaded File
+      let fileReader = new FileReader(); 
+      fileReader.readAsArrayBuffer(this.file); //File Reader help to store file in binary string or array buffer
 
-      const sheetname = workbook.SheetNames; //Get the name of excel sheet postioned on index 0
-      const sheet1 = workbook.Sheets[sheetname[0]];
-      this.records =  xls.utils.sheet_to_json(sheet1) // Finally records come into the Array Form
-      
-      const count = this.records.filter((item: any) => item).length;
+      fileReader.onload =()=>{
+        let data = fileReader.result; //Store array buffer data in data varable
+        let workbook = xls.read(data, {type:'array'}); // Here we are reading file data
 
-      console.log(count);
-      var heads_Obj = this.records[0];
+        const sheetname = workbook.SheetNames; //Get the name of excel sheet postioned on index 0
+        const sheet1 = workbook.Sheets[sheetname[0]];
+        this.records =  xls.utils.sheet_to_json(sheet1) // Finally records come into the Array Form
+        
+        const count = this.records.filter((item: any) => item).length;
 
-      //  console.log(this.records);
-      //  console.log(this.records[0]);
+        console.log(count);
+        var heads_Obj = this.records[0];
 
-      this.records.forEach((element:any) => {
-        this.heads_Obj = Object.keys(element);
-        this.body_Obj.push(Object.values(element));
-      });
+        //  console.log(this.records);
+        //  console.log(this.records[0]);
 
-      // console.log(this.heads_Obj);
-      // console.log(this.body_Obj);
+        this.records.forEach((element:any) => {
+          this.heads_Obj = Object.keys(element);
+          this.body_Obj.push(Object.values(element));
+        });
 
-    }
+        // console.log(this.heads_Obj);
+        // console.log(this.body_Obj);
+      }
+
   }
 
 // 
 
 uploadFile(){
-  let formData = new FormData();
-  formData.append('file', this.file);
+  if (this.isFileSelected && this.file) {
+    let formData = new FormData();
+    formData.append('file', this.file);
 
-  this._http.post(this.fileUploadUrl, formData).subscribe(
-    (data) =>{
-      //Success
-      console.log(data);
-      alert(data);
-      // alert("File is uploaded");
+    this._http.post(this.fileUploadUrl, formData).subscribe(
+      (data) =>{
+        //Success
+        console.log(data);
+        console.log('File uploaded:', this.file.name);
+        this.clearFile();
+        alert(data);
+        // alert("File is uploaded");
 
-    },
-    (error) =>{
-      console.log(error);
-    }
-  );
+      },
+      (error) =>{
+        console.log(error);
+      }
+    );
+  }
 }
 
 
